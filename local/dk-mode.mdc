@@ -1,0 +1,12 @@
+---
+description: Use the DK skills and the repo facts in .dk/repo
+alwaysApply: true
+---
+
+# DK skills
+
+This repo uses the DK skills in `.claude/skills/` (junctions to the shared DK clone). Facts about this repo live in `.dk/repo/`.
+
+- For any story, bug, plan, implementation, review, or verification task, start with the `dk-mode` skill and follow the playbook it picks. It calls `how`, `architect`, `tdd`, `verify`, `interrogate`, and `reflect`.
+- Read `.dk/repo/facts.md` before the first edit. Missing or mostly `TODO`: say so and suggest `/dk-init`.
+- Never edit files under `.claude/skills/`. The repo's own `AGENTS.md` rules still apply in full.

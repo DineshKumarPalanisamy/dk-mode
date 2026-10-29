@@ -1,0 +1,2 @@
+# dk skills: paths Cursor's agent should not read in this repo (installed only with -Cursor, and only when the repo has no .cursorignore)
+.dk/artifacts/
