@@ -26,13 +26,16 @@ When this skill loads, continue the user's request in the same turn. Never end t
 3. Match a playbook below. Open its file. Copy its steps into the todo list word for word. A step you skip stays with `skip: <reason>`.
 4. Read the preflight result. Do not start a long `how` or Explore before the start message. Trace the drive path (`how`) in the background after it.
 5. Send **one** start message within the first few minutes, then run the playbook to the end without asking again. It holds, in this order:
+   - Question 1: the user's goal, the problem it solves, and the smallest change you expect, in your own words. The user confirms or corrects it like any other question (step 9).
    - Done means (the checks from step 2) and the playbook you picked.
    - Everything only the user can do, all at once: every `USER` line from preflight (admin commands, setup scripts, closing a debugger), and any sign-in the drive needs. Never ask for a secret that `.dk/repo/verify.md` (Sign-in and secrets) says the agent reads from an env var or a secret store. Ask only if it is missing.
    - The end gates as one yes/no: "At the end, may I commit (`<commit format>`), push `<branch>`, and open the PR to `<base branch>`?" Take the formats from `.dk/repo/facts.md` (Git and PR). A yes covers exactly those actions for this task. No git in the repo: skip this line and say so.
-   - Real open choices only (a product or design decision). Never ask what code, data, or the repo docs can answer.
+   - Every open question about the task known so far, each with your recommended answer (see step 9). An existing option (an endpoint on the base branch, a sibling screen's pattern, a flag that already gates the same job) is your recommendation, not a decision. Never ask how code works or where a screen is: look it up.
 6. Do not stop between playbook steps to ask "shall I continue". Report progress in one line and keep going. Stop only for a new hard gate that step 5 did not cover, or a blocker no local fix can clear; then batch every question you have at that moment.
 7. Ask each gate question once. If the user has not answered it, do not repeat it at every stop. Keep it as one line at the end of the final reply.
-8. When code can answer a choice ("run both?", "which port?"), decide, act, and report. Do not ask.
+   - A check that waits on a gate (a shared flag toggle, a test environment) never holds back the rest. Finish "End of every task" on what can run, mark that check "not run: <reason>" in the PR, and ask the gate question in one line.
+8. When code can answer a question about how to run things ("run both?", "which port?"), decide, act, and report. This never covers what the task does.
+9. **The user decides the plan.** After `plan.md`, send the question batch per `references/plan-format.md` and stop. Write no code until the user has answered every question. Each answer goes into Decisions as confirmed by the user.
 
 ## End of every task (always, no exceptions)
 
@@ -79,7 +82,7 @@ These override "proceed without asking" everywhere in the DK skills. A yes given
 - Anything against production, a shared database, or a shared cloud resource. Migrations or data changes outside a local database. Exceptions, no ask needed: the local data and resources that `.dk/repo/verify.md` lists as allowed.
 - Deleting data, force-push, rewriting published history.
 - Printing, copying, or logging a secret, key, token, password, or personal or card data. Refer to a secret by its config key name only.
-- A blocking open question (see `references/plan-format.md`). Ask all blockers in one batched turn.
+- Any open question about the task (step 9).
 - Any extra gate listed in `.dk/repo/risk-checks.md` (Repo gates).
 - If you break a gate by accident (a run against a shared database or service), stop that work. Your next message, before any other topic, says what ran, against which data or services, the list of calls, and the log path.
 
@@ -112,7 +115,7 @@ Read the file before you apply a principle. In your reply, name each principle t
 - **Build the Lever** (`principles/build-the-lever.md`). Non-trivial edits, migrations, analyses, checks. Write the script that does or proves it.
 - **Minimize Reader Load** (`principles/minimize-reader-load.md`). Review and refactoring. Fewer layers to trace, less state to hold.
 - **Guard the Context Window** (`principles/guard-the-context-window.md`). Large output. Send bulk to subagents.
-- **Never Block on the Human** (`principles/never-block-on-the-human.md`). Reversible work. Proceed, then show.
+- **Never Block on the Human** (`principles/never-block-on-the-human.md`). How to run things. Proceed, then show. Task decisions go to the user.
 - **Encode Lessons in Structure** (`principles/encode-lessons-in-structure.md`). The same mistake or user correction twice. Turn it into a script check, not more text.
 
 ## Subagents
@@ -125,6 +128,11 @@ Read the file before you apply a principle. In your reply, name each principle t
 - You own every subagent's output. Check its diff and claims yourself (`git status`, re-run its command). Do not pass its summary through.
 - One writer per file at a time. Give a code-writing subagent an exact file list and success check.
 
+## Code comments
+
+- Add a comment only when a reader could not understand the code without it. Simple code gets none.
+- Keep it to the important point: 1 line, at most 2. No comment blocks, no story history.
+
 ## Evidence rules for the reply
 
 - Every claim carries its evidence or a label: measured, inferred, or guess.
@@ -132,3 +140,4 @@ Read the file before you apply a principle. In your reply, name each principle t
 - Never invent a link, a PR URL, a test result, or a work item field.
 - A check that could not run is reported as not run, with the reason. Never as passed.
 - Follow the user's own reply style (CLAUDE.md) for shape and length.
+- No is an acceptable answer. When the user shows an approach or asks "should we", give your real judgment. Push back with the reason when you disagree. Do not agree by default.

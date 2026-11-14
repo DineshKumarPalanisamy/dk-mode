@@ -4,19 +4,15 @@ Path: the plan folder named in `.dk/repo/facts.md` (Where docs live), as `<plan 
 
 ## Blocking-question gate
 
-Before writing tasks, list every open question and split them.
+**The user decides, not the AI.** Before writing tasks, list every open question about the task: behavior, scope, data, screens, and which existing endpoint, pattern, or flag to reuse. Every one is blocking. Nothing is "settle while coding" or "verify will tell", and Decisions holds no row "to settle in code". Always ask about: data scope or tenancy, security or secrets, external or message contracts, a stored format or migration, a missing entity, an integration with no precedent, and every topic in `.dk/repo/risk-checks.md` (Blocking topics).
 
-- **Blocking**: the answer changes the shape of more than one task. When unsure, treat as blocking for: data scope or tenancy, security or secrets, external or message contracts, a stored format or migration, a missing entity, an integration with no precedent, and every topic in `.dk/repo/risk-checks.md` (Blocking topics).
-- **Non-blocking**: a local choice. Pick a default, tag the task `(deferred: <topic>)`, and list it under Deferred unknowns.
+Look each question up first in code, data, and the repo docs, so it carries facts and your recommended answer. A fact you found is evidence for the user, not a decision. A question that cites a spec or doc section first searches the local copy for that section and says "have it" with the quote, or "do not have it".
 
-First check whether you can answer a question yourself by reading code or running something. Only questions no experiment can settle go to the human.
+Ask all questions in one turn, then stop. Write no code until every question has an answer. Outcomes:
 
-Ask all blocking questions in one turn, then stop. Outcomes:
-
-- Answered: record as D1, D2, ... in Decisions.
-- The human defers it: put it in group 1; tasks that wait on it get `(blocked: 1.x / OQ-n)`.
-- "Just plan it": continue on assumptions, each listed under Assumptions.
-- No blockers: say so in one line and continue.
+- Answered: record as D1, D2, ... in Decisions, marked "confirmed by user".
+- The user defers it: put it in group 1; tasks that wait on it get `(blocked: 1.x / OQ-n)`.
+- No open question: say so in one line and continue.
 
 ## File shape
 
@@ -50,10 +46,8 @@ Done means:
 - [ ] N.1 <the real command and the expected result> [proof: integration]
 
 ## Decisions
-| # | Question | Answer | Date | Reason |
+| # | Question | Answer (confirmed by user) | Date | Reason |
 
-## Deferred unknowns
-## Assumptions
 ## Out of scope
 ```
 
